@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, StatusBar } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { firebase, db } from "./firebase";
 
+import ListingEditScreen from "./app/screens/ListingEditScreen";
 import AuthNavigator from "./app/navigations/AuthNavigator";
 import colors from "./app/config/colors";
+import navigationTheme from "./app/navigations/navigationTheme";
 
 export default function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -28,8 +30,8 @@ export default function App() {
 
   return (
     <NavigationContainer theme={navigationTheme}>
-      {/* {currentUser ? <AppNavigator /> : <AuthNavigator />} */}
-      <AuthNavigator />
+      {currentUser ? <ListingEditScreen /> : <AuthNavigator />}
+      {/* <AuthNavigator /> */}
       <StatusBar backgroundColor={colors.primary} />
     </NavigationContainer>
   );
