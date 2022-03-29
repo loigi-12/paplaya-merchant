@@ -41,7 +41,19 @@ const categories = [
 
 function ListingEditScreen(props) {
   const [urls, setUrls] = useState([]);
+  const [merchant, setMerchant] = useState();
+
   useEffect(() => {}, []);
+
+  db.collection("merchants")
+    .get()
+    .then((snapshot) =>
+      snapshot.docs.forEach((doc) => {
+        if (doc.data().owner_uid === firebase.auth().currentUser.uid) {
+          setMerchant(doc.data().business_name);
+        }
+      })
+    );
 
   const handleUploadListing = async ({
     category,
@@ -49,10 +61,9 @@ function ListingEditScreen(props) {
     images,
     price,
     title,
-    owner,
   }) => {
     await db
-      .collection("users")
+      .collection("merchants")
       .doc(firebase.auth().currentUser.email)
       .collection("listings")
       .add({
@@ -62,7 +73,7 @@ function ListingEditScreen(props) {
         images,
         price,
         title,
-        owner,
+        owner: merchant,
       })
       .then(() => {
         console.log("Listings uploaded successfully!");
@@ -119,7 +130,7 @@ function ListingEditScreen(props) {
           description: "",
           category: null,
           images: [],
-          owner: firebase.auth().currentUser.email,
+          owner: merchant,
         }}
         onSubmit={(values) => handleUploadListing(values)}
         validationSchema={validationSchema}
