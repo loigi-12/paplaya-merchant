@@ -3,8 +3,11 @@ import { StyleSheet, Text, View, StatusBar } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { firebase, db } from "./firebase";
 
-import ListingEditScreen from "./app/screens/ListingEditScreen";
 import AuthNavigator from "./app/navigations/AuthNavigator";
+import AppNavigator from "./app/navigations/AppNavigator";
+import ListingEditScreen from "./app/screens/ListingEditScreen";
+import ProductsScreen from "./app/screens/ProductsScreen";
+
 import colors from "./app/config/colors";
 import navigationTheme from "./app/navigations/navigationTheme";
 
@@ -30,8 +33,9 @@ export default function App() {
 
   return (
     <NavigationContainer theme={navigationTheme}>
-      {currentUser ? <ListingEditScreen /> : <AuthNavigator />}
-      {/* <AuthNavigator /> */}
+      {/* {currentUser ? <ListingEditScreen /> : <AuthNavigator />} */}
+      {currentUser ? <AppNavigator /> : <AuthNavigator />}
+      {/* <ProductsScreen /> */}
       <StatusBar backgroundColor={colors.primary} />
     </NavigationContainer>
   );
