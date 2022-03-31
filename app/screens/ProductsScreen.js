@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, FlatList, Image } from "react-native";
+import { useSelector } from "react-redux";
 
 import { db, firebase } from "../../firebase";
 
@@ -9,6 +10,22 @@ import colors from "../config/colors";
 
 function ProductsScreen(props) {
   const [products, setProducts] = useState();
+  const [merchant, setMerchant] = useState();
+
+  const fetch_data = async () => {
+    await db
+      .collection("merchants")
+      .get()
+      .then((snapshot) =>
+        snapshot.docs.forEach((doc) => {
+          if (doc.data().owner_uid === firebase.auth().currentUser.uid) {
+            setMerchant(doc.data().business_name);
+          }
+        })
+      );
+  };
+
+  console.log("business name:", merchant);
 
   useEffect(() => result(), []);
 
@@ -17,26 +34,26 @@ function ProductsScreen(props) {
       setProducts(snapshot.docs.map((doc) => doc.data()));
     });
 
-  console.log(products.filter((p) => p.owner === "fullhouse"));
-
   return (
     <View style={styles.container}>
-      <FlatList
-        data={products.filter((p) => p.owner === "fullhouse")}
-        keyExtractor={(product) => product.id.toString()}
-        renderItem={({ item }) => (
-          <ListItem
-            title={item.title}
-            subTitle={item.description}
-            price={item.price}
-            style={styles.items}
-            ItemComponent={
-              <Image style={styles.image} source={{ uri: item.images[0] }} />
-            }
-          />
-        )}
-        ItemSeparatorComponent={ListItemSeparator}
-      />
+      {products && (
+        <FlatList
+          data={products.filter((p) => p.owner === merchant)}
+          keyExtractor={(product) => product.id.toString()}
+          renderItem={({ item }) => (
+            <ListItem
+              title={item.title}
+              subTitle={item.description}
+              price={item.price}
+              style={styles.items}
+              ItemComponent={
+                <Image style={styles.image} source={{ uri: item.images[0] }} />
+              }
+            />
+          )}
+          ItemSeparatorComponent={ListItemSeparator}
+        />
+      )}
     </View>
   );
 }

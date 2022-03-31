@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, StatusBar } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { firebase, db } from "./firebase";
+import { Provider, useDispatch } from "react-redux";
 
-import { Provider } from "react-redux";
+import * as actions from "./app/redux/actionTypes";
 import store from "./app/redux/store";
 
 import AuthNavigator from "./app/navigations/AuthNavigator";

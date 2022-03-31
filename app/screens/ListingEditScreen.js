@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, ActivityIndicator, Platform } from "react-native";
 import * as Yup from "yup";
 import uuid from "react-uuid";
+
 import { db, firebase } from "../../firebase";
 
 import { Form, FormField, FormPicker, SubmitButton } from "../components/forms";
@@ -51,6 +52,7 @@ function ListingEditScreen(props) {
       snapshot.docs.forEach((doc) => {
         if (doc.data().owner_uid === firebase.auth().currentUser.uid) {
           setMerchant(doc.data().business_name);
+          storeMerchantName(merchant);
         }
       })
     );
