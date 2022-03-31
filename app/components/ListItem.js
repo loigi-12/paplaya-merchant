@@ -16,6 +16,7 @@ function ListItem({
   style,
   subTitle,
   title,
+  price,
 }) {
   return (
     <Swipeable renderRightActions={renderRightActions}>
@@ -24,37 +25,16 @@ function ListItem({
           {IconComponent}
           {image && <Image style={styles.image} source={image} />}
           <View style={styles.detailsContainer}>
-            {/* Not Reversed */}
-            {!reversed && (
-              <View>
-                {title && (
-                  <Text style={styles.title} numberOfLines={1}>
-                    {title}
-                  </Text>
-                )}
-                {subTitle && (
-                  <Text style={styles.subTitle} numberOfLines={2}>
-                    {subTitle}
-                  </Text>
-                )}
-              </View>
-            )}
+            <View>
+              <Text style={styles.title} numberOfLines={1}>
+                {title}
+              </Text>
+              <Text style={styles.subTitle} numberOfLines={2}>
+                {subTitle}
+              </Text>
+            </View>
 
-            {/* Reversed */}
-            {reversed && (
-              <View style={{ flex: 1 }}>
-                {subTitle && (
-                  <Text style={styles.subTitleRev} numberOfLines={2}>
-                    {subTitle}
-                  </Text>
-                )}
-                {title && (
-                  <Text style={styles.titleRev} numberOfLines={1}>
-                    {title}
-                  </Text>
-                )}
-              </View>
-            )}
+            <Text style={styles.price}>{`₱ ${price}`}</Text>
           </View>
           {!ItemComponent ? (
             <MaterialCommunityIcons
@@ -87,18 +67,17 @@ const styles = StyleSheet.create({
     height: 35,
     borderRadius: 35,
   },
-  title: {
-    fontWeight: "500",
+  price: {
+    marginTop: 5,
+    color: colors.dark,
   },
-  titleRev: {
-    color: colors.medium,
-    fontStyle: "italic",
+  title: {
+    fontWeight: "bold",
+    marginTop: 3,
+    color: colors.dark,
   },
   subTitle: {
     color: colors.medium,
-  },
-  subTitleRev: {
-    color: colors.secondary,
   },
 });
 
