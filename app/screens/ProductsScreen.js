@@ -16,24 +16,13 @@ function ProductsScreen(props) {
     await db.collectionGroup("listings").onSnapshot((snapshot) => {
       setProducts(snapshot.docs.map((doc) => doc.data()));
     });
-  // await db
-  //   .collection("merchants")
-  //   .get()
-  //   .then((snapshot) =>
-  //     snapshot.docs.forEach((doc) => {
-  //       if (doc.data().owner_uid === firebase.auth().currentUser.uid) {
-  //         setProducts(doc.data());
-  //         console.log(doc.data());
-  //       }
-  //     })
-  //   );
 
-  console.log(products);
+  console.log(products.filter((p) => p.owner === "fullhouse"));
 
   return (
     <View style={styles.container}>
       <FlatList
-        data={products}
+        data={products.filter((p) => p.owner === "fullhouse")}
         keyExtractor={(product) => product.id.toString()}
         renderItem={({ item }) => (
           <ListItem
