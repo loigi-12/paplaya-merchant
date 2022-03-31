@@ -3,6 +3,9 @@ import { StyleSheet, Text, View, StatusBar } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { firebase, db } from "./firebase";
 
+import { Provider } from "react-redux";
+import store from "./app/redux/store";
+
 import AuthNavigator from "./app/navigations/AuthNavigator";
 import AppNavigator from "./app/navigations/AppNavigator";
 import ListingEditScreen from "./app/screens/ListingEditScreen";
@@ -32,20 +35,17 @@ export default function App() {
   }, []);
 
   return (
-    <NavigationContainer theme={navigationTheme}>
-      {/* {currentUser ? <ListingEditScreen /> : <AuthNavigator />} */}
-      {currentUser ? <AppNavigator /> : <AuthNavigator />}
-      {/* <ProductsScreen /> */}
-      <StatusBar backgroundColor={colors.primary} />
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer theme={navigationTheme}>
+        {/* {currentUser ? <ListingEditScreen /> : <AuthNavigator />} */}
+        {currentUser ? <AppNavigator /> : <AuthNavigator />}
+        {/* <ProductsScreen /> */}
+        <StatusBar backgroundColor={colors.primary} />
+      </NavigationContainer>
+    </Provider>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
+  container: {},
 });
