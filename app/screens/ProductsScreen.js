@@ -7,8 +7,10 @@ import { db, firebase } from "../../firebase";
 import ListItem from "../components/ListItem";
 import ListItemSeparator from "../components/ListItemSeparator";
 import colors from "../config/colors";
+import routes from "../navigations/routes";
+import ListItemDeleteAction from "./../components/ListItemDeleteAction";
 
-function ProductsScreen(props) {
+function ProductsScreen({ navigation }) {
   const [products, setProducts] = useState();
   const [merchant, setMerchant] = useState();
 
@@ -25,14 +27,17 @@ function ProductsScreen(props) {
       );
   };
 
-  console.log("business name:", merchant);
-
-  useEffect(() => result(), []);
-
   const result = async () =>
     await db.collectionGroup("listings").onSnapshot((snapshot) => {
       setProducts(snapshot.docs.map((doc) => doc.data()));
     });
+
+  useEffect(() => {
+    fetch_data();
+    result();
+  }, []);
+
+  console.log(merchant);
 
   return (
     <View style={styles.container}>
@@ -42,13 +47,15 @@ function ProductsScreen(props) {
           keyExtractor={(product) => product.id.toString()}
           renderItem={({ item }) => (
             <ListItem
-              title={item.title}
-              subTitle={item.description}
-              price={item.price}
               style={styles.items}
+              price={item.price}
+              subTitle={item.description}
+              title={item.title}
+              onPress={() => navigation.navigate(routes.LISTING_EDIT)}
               ItemComponent={
                 <Image style={styles.image} source={{ uri: item.images[0] }} />
               }
+              renderRightActions={ListItemDeleteAction}
             />
           )}
           ItemSeparatorComponent={ListItemSeparator}

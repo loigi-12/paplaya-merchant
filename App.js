@@ -17,6 +17,7 @@ import navigationTheme from "./app/navigations/navigationTheme";
 
 export default function App() {
   const [currentUser, setCurrentUser] = useState(null);
+  const [merchant, setMerchant] = useState();
 
   const userHandler = (user) =>
     user ? setCurrentUser(user) : setCurrentUser(null);

@@ -1,17 +1,23 @@
 import React from "react";
+import { Text, StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import OrdersScreen from "../screens/OrdersScreen";
 import ProductsScreen from "../screens/ProductsScreen";
 import ProfileScreen from "../screens/ProfileScreen";
+import Button from "../components/Button";
+import LinkButton from "./../components/LinkButton";
+import colors from "../config/colors";
+import ProductsNavigator from "./ProductsNavigator";
 
 const Tab = createBottomTabNavigator();
 
 const AppNavigator = () => (
   <Tab.Navigator
     screenOptions={{
-      headerShown: false,
+      headerShown: true,
+      headerTitleAlign: "center",
     }}
   >
     <Tab.Screen
@@ -26,12 +32,13 @@ const AppNavigator = () => (
     />
     <Tab.Screen
       name="Products"
-      component={ProductsScreen}
+      component={ProductsNavigator}
       //   component={ProductsNavigator} prefered
       options={{
         tabBarIcon: ({ color, size }) => (
           <MaterialCommunityIcons name="food" size={size} color={color} />
         ),
+        headerShown: false,
       }}
     />
     <Tab.Screen
@@ -50,5 +57,12 @@ const AppNavigator = () => (
     />
   </Tab.Navigator>
 );
+
+const styles = StyleSheet.create({
+  button: {
+    color: colors.primary,
+    marginRight: 10,
+  },
+});
 
 export default AppNavigator;

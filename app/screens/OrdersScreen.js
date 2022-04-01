@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Image, FlatList } from "react-native";
 
 import Badge from "./../components/Badge";
@@ -14,6 +14,31 @@ const carts = [
 ];
 
 function OrdersScreen(props) {
+  const [orders, setOrders] = useState();
+  const [merchant, setMerchant] = useState();
+
+  const fetch_data = async () => {
+    await db
+      .collection("users")
+      .get()
+      .then((snapshot) =>
+        snapshot.docs.forEach((doc) => {
+          if (doc.data().owner_uid === firebase.auth().currentUser.uid) {
+            setMerchant(doc.data().business_name);
+          }
+        })
+      );
+  };
+
+  const fetchNewOrders = async () =>
+    await db.collectionGroup("orders").onSnapshot((snapshot) => {
+      setOrders(snapshot.docs.map((doc) => doc.data()));
+    });
+
+  useEffect(() => {
+    fetchNewOrders();
+  }, []);
+
   return (
     <View style={styles.container}>
       <View>
@@ -32,9 +57,9 @@ function OrdersScreen(props) {
               <ListItem
                 style={styles.items}
                 title={`1 x ${item.title}`}
-                // ItemComponent={
-                //   <Text style={styles.textComponent}>{`₱ ${item.price}`}</Text>
-                // }
+                ItemComponent={
+                  <Text style={styles.textComponent}>{`₱ ${item.price}`}</Text>
+                }
               />
             </View>
           )}

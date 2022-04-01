@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Image, StyleSheet } from "react-native";
+import { View, Image, StyleSheet, ScrollView } from "react-native";
 import * as Yup from "yup";
 import { auth, db, firebase } from "../../firebase";
 
@@ -14,7 +14,7 @@ import routes from "../navigations/routes";
 const validationSchema = Yup.object().shape({
   name: Yup.string().label("Name"),
   email: Yup.string().required().email().label("Email"),
-  business_name: Yup.string().required().label("Business Name"),
+  Yup.string().required().label("Business Name"),
   stall_no: Yup.number().required().label("Stall No."),
   phone: Yup.number().required().label("Mobile Number"),
   address: Yup.string().label("Address"),
@@ -28,7 +28,7 @@ function RegisterScreen({ navigation }) {
   const handleRegister = async ({
     email,
     password,
-    business_name,
+    businessName,
     stall_no,
     address,
     phone,
@@ -44,9 +44,10 @@ function RegisterScreen({ navigation }) {
       email: firebase.auth().currentUser.email,
       name,
       address,
-      business_name,
+      businessName,
       stall_no,
       phone,
+      accountType: 'merchant'
     });
     // .catch((error) => alert(error.message));
 
@@ -54,100 +55,102 @@ function RegisterScreen({ navigation }) {
   };
 
   return (
-    <Screen style={styles.container}>
-      <View style={{ flex: 1 }}>
-        <View style={styles.textContainer}>
-          <Text style={styles.title}>Register</Text>
-          <Text style={styles.subTitle}>Add your details to register</Text>
+    <ScrollView>
+      <Screen style={styles.container}>
+        <View style={{ flex: 1 }}>
+          <View style={styles.textContainer}>
+            <Text style={styles.title}>Register</Text>
+            <Text style={styles.subTitle}>Add your details to register</Text>
+          </View>
+          <Form
+            initialValues={{
+              name: "",
+              email: "",
+              "",
+              stall_no: "",
+              address: "",
+              phone: "",
+              password: "",
+            }}
+            onSubmit={(values) => handleRegister(values)}
+            validationSchema={validationSchema}
+          >
+            <FormField
+              autoCapitalize="none"
+              autoCorrect={false}
+              icon="account"
+              name="name"
+              placeholder="Fullname"
+            />
+            <FormField
+              autoCapitalize="none"
+              autoCorrect={false}
+              icon="email"
+              name="email"
+              keyboardType="email"
+              placeholder="Email"
+            />
+            <FormField
+              autoCapitalize="none"
+              autoCorrect={false}
+              icon="lock"
+              name="password"
+              placeholder="Password"
+              secureTextEntry
+              textContextType="password"
+            />
+            <FormField
+              autoCapitalize="none"
+              autoCorrect={false}
+              icon="lock"
+              name="confirmPassword"
+              placeholder="Confirm Password"
+              secureTextEntry
+              textContextType="password"
+            />
+            <View style={{ marginVertical: 10 }}></View>
+            <FormField
+              autoCapitalize="none"
+              autoCorrect={false}
+              icon="domain"
+              name="business_name"
+              placeholder="Business Name"
+            />
+            <FormField
+              autoCapitalize="none"
+              autoCorrect={false}
+              icon="cart-plus"
+              name="stall_no"
+              placeholder="Stall No."
+            />
+            <FormField
+              autoCapitalize="none"
+              autoCorrect={false}
+              icon="navigation"
+              name="address"
+              placeholder="Address"
+            />
+            <FormField
+              autoCapitalize="none"
+              autoCorrect={false}
+              icon="phone"
+              keyboardType="numeric"
+              maxLength={11}
+              name="phone"
+              placeholder="Phone"
+            />
+            <SubmitButton title="Register" />
+          </Form>
         </View>
-        <Form
-          initialValues={{
-            name: "",
-            email: "",
-            business_name: "",
-            stall_no: "",
-            address: "",
-            phone: "",
-            password: "",
-          }}
-          onSubmit={(values) => handleRegister(values)}
-          validationSchema={validationSchema}
-        >
-          <FormField
-            autoCapitalize="none"
-            autoCorrect={false}
-            icon="account"
-            name="name"
-            placeholder="Fullname"
+        <View style={styles.footer}>
+          <Text style={styles.subTitle}>Already have an account?</Text>
+          <LinkButton
+            title="Login"
+            onPress={() => navigation.navigate(routes.LOGIN)}
           />
-          <FormField
-            autoCapitalize="none"
-            autoCorrect={false}
-            icon="email"
-            name="email"
-            keyboardType="email"
-            placeholder="Email"
-          />
-          <FormField
-            autoCapitalize="none"
-            autoCorrect={false}
-            icon="lock"
-            name="password"
-            placeholder="Password"
-            secureTextEntry
-            textContextType="password"
-          />
-          <FormField
-            autoCapitalize="none"
-            autoCorrect={false}
-            icon="lock"
-            name="confirmPassword"
-            placeholder="Confirm Password"
-            secureTextEntry
-            textContextType="password"
-          />
-          <View style={{ marginVertical: 10 }}></View>
-          <FormField
-            autoCapitalize="none"
-            autoCorrect={false}
-            icon="domain"
-            name="business_name"
-            placeholder="Business Name"
-          />
-          <FormField
-            autoCapitalize="none"
-            autoCorrect={false}
-            icon="cart-plus"
-            name="stall_no"
-            placeholder="Stall No."
-          />
-          <FormField
-            autoCapitalize="none"
-            autoCorrect={false}
-            icon="navigation"
-            name="address"
-            placeholder="Address"
-          />
-          <FormField
-            autoCapitalize="none"
-            autoCorrect={false}
-            icon="phone"
-            keyboardType="numeric"
-            maxLength={11}
-            name="phone"
-            placeholder="Phone"
-          />
-          <SubmitButton title="Register" />
-        </Form>
-      </View>
-      <View style={styles.footer}>
-        <Text style={styles.subTitle}>Already have an account?</Text>
-        <LinkButton
-          title="Login"
-          onPress={() => navigation.navigate(routes.LOGIN)}
-        />
-      </View>
-    </Screen>
+        </View>
+      </Screen>
+    </ScrollView>
   );
 }
 

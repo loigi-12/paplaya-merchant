@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Image, StyleSheet, ScrollView } from "react-native";
 import * as Yup from "yup";
 import { auth, db, firebase } from "../../firebase";
@@ -19,6 +19,23 @@ const validationSchema = Yup.object().shape({
 });
 
 function ProfileScreen(props) {
+  const [merchant, setMerchant] = useState();
+
+  const fetch_data = async () => {
+    await db
+      .collection("merchants")
+      .get()
+      .then((snapshot) =>
+        snapshot.docs.forEach((doc) => {
+          if (doc.data().owner_uid === firebase.auth().currentUser.uid) {
+            setMerchant(doc.data().business_name);
+          }
+        })
+      );
+  };
+
+  fetch_data();
+
   return (
     <ScrollView>
       <Screen style={styles.container}>
@@ -30,7 +47,7 @@ function ProfileScreen(props) {
                 uri: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
               }}
             />
-            <Text style={styles.title}>Hi there Junrie!</Text>
+            <Text style={styles.title}>{`Hi there ${merchant}!`}</Text>
           </View>
           <Form
             initialValues={{

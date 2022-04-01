@@ -21,6 +21,7 @@ function WelcomeScreen({ navigation }) {
           />
           <Text style={styles.title}>PaPlaya</Text>
           <Text style={styles.text}>Food Delivery</Text>
+          <Text style={styles.merchant}>Merchant</Text>
         </View>
       </View>
       <View style={styles.buttonsContainer}>
@@ -66,10 +67,16 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   title: {
+    color: colors.secondary,
     fontSize: 35,
     fontWeight: "bold",
     marginTop: 10,
-    color: colors.secondary,
+  },
+  merchant: {
+    color: colors.primary,
+    fontSize: 20,
+    fontWeight: "bold",
+    marginTop: 20,
   },
 });
 
