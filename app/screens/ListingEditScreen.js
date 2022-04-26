@@ -47,27 +47,30 @@ const categories = [
   },
 ];
 
-function ListingEditScreen() {
+function ListingEditScreen({ route }) {
+  const products = route.params;
+  console.log(products);
+
   const [urls, setUrls] = useState([]);
   const [merchant, setMerchant] = useState();
   const [merchantId, setMerchantId] = useState();
-  const [formValues, setFormValues] = useState(null);
-
-  useEffect(() => {}, []);
 
   const getMerchant = async () =>
     await db
-      .collection("merchants")
+      .collection("users")
       .get()
       .then((snapshot) =>
         snapshot.docs.forEach((doc) => {
-          setMerchantId(doc.id);
-
           if (doc.data().owner_uid === firebase.auth().currentUser.uid) {
-            setMerchant(doc.data().business_name);
+            setMerchant(doc.data().businessName);
+            setMerchantId(doc.id);
           }
         })
       );
+
+  useEffect(() => {
+    getMerchant();
+  }, []);
 
   const addProducts = async ({
     category,
@@ -77,7 +80,7 @@ function ListingEditScreen() {
     title,
   }) => {
     await db
-      .collection("merchants")
+      .collection("users")
       .doc(merchantId)
       .collection("listings")
       .add({
@@ -87,6 +90,7 @@ function ListingEditScreen() {
         images,
         price,
         title,
+        quantity: 1,
         owner: merchant,
       })
       .then(() => {
@@ -94,7 +98,7 @@ function ListingEditScreen() {
       })
       .catch((error) => alert(error.message));
 
-    uploadImage(images).then((image) => setUrls(image), console.log(image));
+    uploadImage(images).then((image) => setUrls(image));
   };
 
   const uploadImage = async (uri) => {
@@ -107,7 +111,11 @@ function ListingEditScreen() {
         reject(new TypeError("Network request failed"));
       };
       xhr.responseType = "blob";
-      xhr.open("GET", uri, true);
+      xhr.open(
+        "GET",
+        Platform.OS === "android" ? uri.replace("file:///", "") : uri,
+        true
+      );
       xhr.send(null);
     }).catch((error) => console.log(error.message));
 
@@ -140,7 +148,6 @@ function ListingEditScreen() {
             description: "",
             category: null,
             images: [],
-            owner: merchant,
           }}
           onSubmit={(values) => {
             addProducts(values);

@@ -4,10 +4,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import OrdersScreen from "../screens/OrdersScreen";
-import ProductsScreen from "../screens/ProductsScreen";
 import ProfileScreen from "../screens/ProfileScreen";
-import Button from "../components/Button";
-import LinkButton from "./../components/LinkButton";
 import colors from "../config/colors";
 import ProductsNavigator from "./ProductsNavigator";
 

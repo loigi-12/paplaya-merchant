@@ -1,4 +1,5 @@
 import React from "react";
+import { StyleSheet } from "react-native";
 import { useFormikContext } from "formik";
 
 import TextInput from "../TextInput";
@@ -14,10 +15,17 @@ function FormField({ name, width, ...otherProps }) {
         onChangeText={handleChange(name)}
         width={width}
         {...otherProps}
+        style={styles.input}
       />
       <ErrorMessage error={errors[name]} visible={touched[name]} />
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  input: {
+    flex: 1,
+  },
+});
 
 export default FormField;

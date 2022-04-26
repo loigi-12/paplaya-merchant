@@ -14,8 +14,8 @@ import routes from "../navigations/routes";
 const validationSchema = Yup.object().shape({
   name: Yup.string().label("Name"),
   email: Yup.string().required().email().label("Email"),
-  Yup.string().required().label("Business Name"),
-  stall_no: Yup.number().required().label("Stall No."),
+  businessName: Yup.string().required().label("Business Name"),
+  stallNo: Yup.number().required().label("Stall No."),
   phone: Yup.number().required().label("Mobile Number"),
   address: Yup.string().label("Address"),
   password: Yup.string().required().min(4).label("Password"),
@@ -26,32 +26,33 @@ const validationSchema = Yup.object().shape({
 
 function RegisterScreen({ navigation }) {
   const handleRegister = async ({
-    email,
-    password,
-    businessName,
-    stall_no,
     address,
-    phone,
+    businessName,
+    email,
     name,
+    password,
+    phone,
+    stallNo,
   }) => {
     const authUser = await auth
       .createUserWithEmailAndPassword(email, password)
       .then(() => alert("Account created successfully"))
       .catch((error) => alert(error.message));
 
-    const { id } = db.collection("merchants").add({
-      owner_uid: firebase.auth().currentUser.uid,
-      email: firebase.auth().currentUser.email,
-      name,
-      address,
-      businessName,
-      stall_no,
-      phone,
-      accountType: 'merchant'
-    });
-    // .catch((error) => alert(error.message));
-
-    console.log("Document Id: ", id);
+    // const { id } =
+    await db
+      .collection("users")
+      .add({
+        accountType: "merchant",
+        address,
+        businessName,
+        email: firebase.auth().currentUser.email,
+        name,
+        owner_uid: firebase.auth().currentUser.uid,
+        phone,
+        stallNo,
+      })
+      .catch((error) => alert(error.message));
   };
 
   return (
@@ -64,13 +65,13 @@ function RegisterScreen({ navigation }) {
           </View>
           <Form
             initialValues={{
-              name: "",
-              email: "",
-              "",
-              stall_no: "",
               address: "",
-              phone: "",
+              businessName: "",
+              email: "",
+              name: "",
               password: "",
+              phone: "",
+              stallNo: "",
             }}
             onSubmit={(values) => handleRegister(values)}
             validationSchema={validationSchema}
@@ -87,7 +88,7 @@ function RegisterScreen({ navigation }) {
               autoCorrect={false}
               icon="email"
               name="email"
-              keyboardType="email"
+              keyboardType="email-address"
               placeholder="Email"
             />
             <FormField
@@ -113,14 +114,14 @@ function RegisterScreen({ navigation }) {
               autoCapitalize="none"
               autoCorrect={false}
               icon="domain"
-              name="business_name"
+              name="businessName"
               placeholder="Business Name"
             />
             <FormField
               autoCapitalize="none"
               autoCorrect={false}
               icon="cart-plus"
-              name="stall_no"
+              name="stallNo"
               placeholder="Stall No."
             />
             <FormField
@@ -134,8 +135,8 @@ function RegisterScreen({ navigation }) {
               autoCapitalize="none"
               autoCorrect={false}
               icon="phone"
-              keyboardType="numeric"
-              maxLength={11}
+              keyboardType="phone-pad"
+              maxLength={13}
               name="phone"
               placeholder="Phone"
             />

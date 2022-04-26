@@ -23,7 +23,7 @@ function ProfileScreen(props) {
 
   const fetch_data = async () => {
     await db
-      .collection("merchants")
+      .collection("users")
       .get()
       .then((snapshot) =>
         snapshot.docs.forEach((doc) => {
